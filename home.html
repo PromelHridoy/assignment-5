@@ -10,40 +10,35 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
-    <header>
-  <div class="navbar bg-base-100 shadow-sm px-20">
+<header>
+  <div class="navbar bg-base-100 shadow-sm px-4 md:px-20 py-3 flex flex-wrap md:flex-nowrap justify-center md:justify-between items-center">
 
-    <!-- Left -->
-    <div class="navbar-start flex items-center gap-2">
+    <div class="flex items-center gap-2 mb-2 md:mb-0">
       <img class="w-9" src="./assets/github-logo.png" alt="github logo">
       <h2 class="font-semibold text-2xl">GitHub Issues Tracker</h2>
     </div>
 
-    <!-- Right -->
-    <div class="navbar-end flex gap-2">
-      <input id="input-search" type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
-      <button id="btn-search" class="btn btn-primary">Search</button>
+    <div class="flex gap-2 sm:w-auto">
+      <input id="input-search" type="text" placeholder="Search" class="input input-bordered w-full sm:w-48" />
+      <button id="btn-search" class="btn btn-primary sm:w-auto">Search</button>
     </div>
 
   </div>
 </header>
 
 <main>
-    <section class="w-10/12 mx-auto mt-10">
+    <section class="md:w-10/12 mx-auto sm:mt-10">
 
-  <!-- Filter Buttons -->
-  <div id="btn-container" class="bg-base-100 p-4 rounded-xl shadow flex gap-3 mb-6">
-    <button id="all-btn" onclick="toggleStyles('all-btn')" class="btn btn-primary w-28">All</button>
-    <button id="open-btn" onclick="toggleStyles('open-btn')" class="btn btn-outline w-28">Open</button>
-    <button id="closed-btn" onclick="toggleStyles('closed-btn')" class="btn btn-outline w-28">Closed</button>
+  <div id="btn-container" class="bg-base-100 p-4 rounded-xl shadow flex gap-3 mb-6 justify-center sm:justify-start">
+    <button id="all-btn" onclick="toggleStyles('all-btn')" class="btn btn-primary w-20 sm:w-28">All</button>
+    <button id="open-btn" onclick="toggleStyles('open-btn')" class="btn btn-outline w-20 sm:w-28">Open</button>
+    <button id="closed-btn" onclick="toggleStyles('closed-btn')" class="btn btn-outlinew-20 sm:w-28">Closed</button>
   </div>
 
-  <!-- Issues Header -->
   <div class="bg-base-100  rounded-xl shadow">
 
-    <div class="flex justify-between items-center p-6 border-b border-gray-200">
+    <div class="flex flex-wrap sm:flex-nowrap justify-center sm:justify-between items-center p-6 border-b border-gray-200">
       
-      <!-- Left -->
       <div class="flex items-center gap-3">
         <div class="bg-purple-100 p-2 rounded-full">
             <img src="./assets/Aperture.png" class="w-5" alt="">
@@ -55,7 +50,6 @@
         </div>
       </div>
 
-      <!-- Right Legend -->
       <div class="flex gap-4 text-sm">
         <div class="flex items-center gap-2">
           <div class="w-3 h-3 bg-green-500 rounded-full"></div> Open
@@ -68,7 +62,6 @@
 
     </div>
 
-    <!-- Issues Grid -->
     <div id="card-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
 
       <!-- Card -->
@@ -119,7 +112,6 @@
  
 
 </section>
-<!-- Open the modal using ID.showModal() method -->
 <dialog id="issue-modal" class="modal modal-bottom sm:modal-middle">
   <div class="modal-box  p-8 rounded-2xl bg-white">
     
