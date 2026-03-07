@@ -1,27 +1,118 @@
 const cardContainer = document.getElementById("card-container");
+const total = document.getElementById("total");
+const allBtn = document.getElementById("all-btn");
+const openBtn = document.getElementById("open-btn");
+const closedBtn = document.getElementById("closed-btn");
+const loadingSpinner = document.getElementById("loading-spinner");
+const openContainer = document.getElementById("open-container");
+const closedContainer = document.getElementById("closed-container");
+const issueModal = document.getElementById("issue-modal");
+console.log(issueModal);
+const modalTitle = document.getElementById("modal-title");
+const modalAuthor = document.getElementById("modal-author");
+const modalDescription = document.getElementById("modal-description");
+const modalLabels= document.getElementById("modal-labels");
+const modalAssignee = document.getElementById("modal-assignee");
+const modalPriority = document.getElementById("modal-priority");
 
-async function loadIssues() {
-    const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
-    console.log(res);
-    const data = await res.json()
-   displayIssues(data.data);
+// console.log(total.textContent)
+// console.log(cardContainer.children.length);
+
+
+function toggleStyles(id) {
+  const buttons = ['all-btn', 'open-btn', 'closed-btn'];
+//   const filterContainer = document.getElementById("filter-container");
+
+  buttons.forEach(btnId => {
+    const btn = document.getElementById(btnId);
+
+    btn.classList.remove('btn-primary');
+    btn.classList.add('btn-outline');
+  });
+
+  const activeBtn = document.getElementById(id);
+  activeBtn.classList.remove('btn-outline');
+  activeBtn.classList.add('btn-primary');
+
+  if (id === "open-btn") {
+  openContainer.classList.remove("hidden");
+  closedContainer.classList.add("hidden");
+  cardContainer.classList.add("hidden");
+}
+else if (id === "closed-btn") {
+  openContainer.classList.add("hidden");
+  closedContainer.classList.remove("hidden");
+  cardContainer.classList.add("hidden");
+}
+else {
+  cardContainer.classList.remove("hidden");
+  openContainer.classList.add("hidden");
+  closedContainer.classList.add("hidden");
 }
 
-// {
-// "id": 1,
-// "title": "Fix navigation menu on mobile devices",
-// "description": "The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.",
-// "status": "open",
-// "labels": [
-// "bug",
-// "help wanted"
-// ],
-// "priority": "high",
-// "author": "john_doe",
-// "assignee": "jane_smith",
-// "createdAt": "2024-01-15T10:30:00Z",
-// "updatedAt": "2024-01-15T10:30:00Z"
-// },
+updateTotal(id);
+}
+
+
+
+async function loadIssues() {
+    
+    showLoading();
+
+    const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues");
+    // console.log(res);
+    const data = await res.json()
+   displayIssues(data.data);
+   const filter = data.data.filter(i => i.status === 'open');
+    console.log(filter);
+      displayOpenIssues(filter);
+     const filter2 =data.data.filter(i => i.status === 'closed');
+    console.log(filter2);
+    displayClosedIssues(filter2);
+
+   total.textContent = cardContainer.children.length;
+// updateTotal(id);
+
+hideLoading();
+}
+
+function updateTotal(id) {
+  if (id === "all-btn") {
+    total.textContent = cardContainer.children.length;
+  } else if (id === "open-btn") {
+    total.textContent = openContainer.children.length;
+  } else if (id === "closed-btn") {
+    total.textContent = closedContainer.children.length;
+  }
+}
+
+
+async function openIssueModal(issueId) {
+    console.log(issueId);
+    const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${issueId}`);
+    const data = await res.json()
+    const issueDetails = data.data;
+    modalTitle.textContent = issueDetails.title;
+    modalAuthor.textContent =issueDetails.author;
+    modalDescription.textContent=issueDetails.description;
+    modalAssignee.textContent =issueDetails.assignee;
+    modalPriority.textContent =issueDetails.priority;
+    // modalLabels.innerHTML = issueDetails.renderLabels();
+
+    issueModal.showModal();
+
+
+    
+}
+
+function showLoading(){
+    loadingSpinner.classList.remove("hidden");
+    cardContainer.innerHTML ='';
+}
+
+function hideLoading() {
+    loadingSpinner.classList.add("hidden");
+}
 
 function renderLabels(labels) {
 
@@ -56,7 +147,9 @@ function getPriorityBadge(priority) {
     
 }
 
-function displayIssues(issues) {
+function displayOpenIssues(issues) {
+    console.log(issues);
+    
 
     issues.forEach(issue => {
 
@@ -67,7 +160,7 @@ function displayIssues(issues) {
         div.className = `card bg-base-100 border-t-4 ${getStatusBorder(issue.status)} shadow`;
 
         div.innerHTML = `
-        <div class="card-body p-4">
+        <div onclick="openIssueModal(${issue.id})" class="card-body p-4">
 
           <div class="flex justify-between">
             <img src="${getStatusImage(issue.status)}" alt="">
@@ -88,9 +181,105 @@ function displayIssues(issues) {
 
         </div>
 
-        <div class="border-t p-3 text-xs text-gray-500 space-y-2">
-          <p>#${issue.id} by ${issue.author || "john_doe"}</p>
-          <p>${issue.date || "1/15/2024"}</p>
+        <div onclick="openIssueModal(${issue.id})" class="border-t border-gray-200 p-3 text-xs text-gray-500 space-y-2">
+          <p>#${issue.id} by ${issue.author}</p>
+          <p>"1/15/2024"</p>
+        </div>
+        `;
+
+        openContainer.appendChild(div);
+
+    });
+
+}
+
+function displayClosedIssues(issues) {
+    console.log(issues);
+    
+
+    issues.forEach(issue => {
+
+        const div = document.createElement("div");
+
+        const priorityBadge = getPriorityBadge(issue.priority);
+
+        div.className = `card bg-base-100 border-t-4 ${getStatusBorder(issue.status)} shadow`;
+
+        div.innerHTML = `
+        <div onclick="openIssueModal(${issue.id})" class="card-body p-4">
+
+          <div class="flex justify-between">
+            <img src="${getStatusImage(issue.status)}" alt="">
+           ${priorityBadge}
+          </div>
+
+          <h3 class="font-semibold mt-2">
+            ${issue.title}
+          </h3>
+
+          <p class="text-sm text-gray-500">
+            ${issue.description}
+          </p>
+
+          <div class="flex gap-2 mt-2">
+            ${renderLabels(issue.labels)}
+          </div>
+
+        </div>
+
+        <div onclick="openIssueModal(${issue.id})" class="border-t border-gray-200 p-3 text-xs text-gray-500 space-y-2">
+          <p>#${issue.id} by ${issue.author}</p>
+          <p>"1/15/2024"</p>
+        </div>
+        `;
+
+        closedContainer.appendChild(div);
+
+    });
+
+}
+
+function displayIssues(issues) {
+    console.log(issues);
+    
+    const filter =issues.filter(i => i.status === 'open');
+    console.log(filter);
+    const filter2 =issues.filter(i => i.status === 'closed');
+    console.log(filter2);
+
+    issues.forEach(issue => {
+
+        const div = document.createElement("div");
+
+        const priorityBadge = getPriorityBadge(issue.priority);
+
+        div.className = `card bg-base-100 border-t-4 ${getStatusBorder(issue.status)} shadow`;
+
+        div.innerHTML = `
+        <div onclick="openIssueModal(${issue.id})" class="card-body p-4">
+
+          <div class="flex justify-between">
+            <img src="${getStatusImage(issue.status)}" alt="">
+           ${priorityBadge}
+          </div>
+
+          <h3 class="font-semibold mt-2">
+            ${issue.title}
+          </h3>
+
+          <p class="text-sm text-gray-500">
+            ${issue.description}
+          </p>
+
+          <div class="flex gap-2 mt-2">
+            ${renderLabels(issue.labels)}
+          </div>
+
+        </div>
+
+        <div onclick="openIssueModal(${issue.id})" class="border-t border-gray-200 p-3 text-xs text-gray-500 space-y-2">
+          <p>#${issue.id} by ${issue.author}</p>
+          <p>"1/15/2024"</p>
         </div>
         `;
 
@@ -101,3 +290,38 @@ function displayIssues(issues) {
 }
 
 loadIssues();
+
+document.getElementById("btn-search").addEventListener("click", () => {
+    // removeActive();
+
+    const input = document.getElementById("input-search");
+    const searchValue = input.value.trim().toLowerCase();
+    console.log(searchValue);
+
+    cardContainer.innerHTML = "";
+    openContainer.classList.add("hidden");
+    closedContainer.classList.add("hidden");
+    cardContainer.classList.remove("hidden");
+
+    showLoading()
+
+    fetch(` https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchValue}`)
+    .then((res) => res.json())
+    .then((data) => {
+        const allWords = data.data;
+        console.log(allWords);
+        // displayIssues(allWords)
+        
+        const filterWords = allWords.filter(word => word.title.toLowerCase().includes(searchValue));
+        // console.log(filterWords);
+
+        displayIssues(filterWords);
+
+        total.textContent = filterWords.length;
+
+        hideLoading()
+    })
+})
+
+
+

@@ -1,3 +1,5 @@
+<!-- <button class="btn" onclick="issue_modal.showModal()">Open Issue</button> -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,8 +21,8 @@
 
     <!-- Right -->
     <div class="navbar-end flex gap-2">
-      <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
-      <button class="btn btn-primary">Logout</button>
+      <input id="input-search" type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+      <button id="btn-search" class="btn btn-primary">Search</button>
     </div>
 
   </div>
@@ -30,10 +32,10 @@
     <section class="w-10/12 mx-auto mt-10">
 
   <!-- Filter Buttons -->
-  <div class="bg-base-100 p-4 rounded-xl shadow flex gap-3 mb-6">
-    <button id="all-btn" class="btn btn-primary w-28">All</button>
-    <button id="open-btn" class="btn btn-outline w-28">Open</button>
-    <button id="closed-btn" class="btn btn-outline w-28">Closed</button>
+  <div id="btn-container" class="bg-base-100 p-4 rounded-xl shadow flex gap-3 mb-6">
+    <button id="all-btn" onclick="toggleStyles('all-btn')" class="btn btn-primary w-28">All</button>
+    <button id="open-btn" onclick="toggleStyles('open-btn')" class="btn btn-outline w-28">Open</button>
+    <button id="closed-btn" onclick="toggleStyles('closed-btn')" class="btn btn-outline w-28">Closed</button>
   </div>
 
   <!-- Issues Header -->
@@ -103,15 +105,72 @@
 
     </div>
 
+    <div id="open-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 p-6 hidden">
+    </div>
+    <div id="closed-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 p-6 hidden">
+    </div>
+
+     <div id="loading-spinner" class="h-[60vh] flex hidden justify-center items-center">
+     <span class="loading loading-dots loading-xl"></span>
   </div>
 
+  </div>
+
+ 
+
 </section>
+<!-- Open the modal using ID.showModal() method -->
+<dialog id="issue-modal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box  p-8 rounded-2xl bg-white">
+    
+    <div class="flex flex-col gap-2">
+      <h2 id="modal-title" class="text-xl font-bold text-slate-800">Fix broken image uploads</h2>
+      <div class="flex items-center gap-2 text-sm text-slate-500">
+        <span class="badge badge-success gap-1 text-white font-semibold">
+          Opened
+        </span>
+        <p>• Opened by <span id="modal-author" class="text-slate-700">Fahim Ahmed</span></p>
+        <p>• 22/02/2026</p>
+      </div>
+    </div>
+
+    <div id="modal-labels" class="flex gap-2 mt-4">
+      <span class="badge bg-red-100 text-red-300 border-none font-semibold py-3">BUG</span>
+      <span class="badge bg-orange-100 text-orange-300 border-none font-semibold py-3">HELP WANTED</span>
+    </div>
+
+    <p id="modal-description" class="py-6 text-slate-600">
+      The navigation menu doesn't collapse properly on mobile devices. Need to fix the responsive behavior.
+    </p>
+
+    <div class="bg-slate-50 p-6 rounded-xl flex justify-start items-center mb-6 gap-24">
+      <div>
+        <p class="text-xs font-bold text-slate-400 mb-1">Assignee:</p>
+        <p id="modal-assignee" class="text-lg font-bold text-slate-700">Fahim Ahmed</p>
+      </div>
+      <div class="text-center">
+        <p class="text-xs font-bold text-slate-400  mb-1">Priority:</p>
+        <span id="modal-priority" class="badge badge-error text-white font-bold p-3">HIGH</span>
+      </div>
+    </div>
+
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn bg-indigo-600 hover:bg-indigo-700 text-white border-none px-8 rounded-lg shadow-lg">
+          Close
+        </button>
+      </form>
+    </div>
+  </div>
+</dialog>
 </main>
 
 
     <script src="./scripts/home.js"></script>
 </body>
 </html>
+
+
 
 
 
