@@ -14,6 +14,7 @@ const modalDescription = document.getElementById("modal-description");
 const modalLabels= document.getElementById("modal-labels");
 const modalAssignee = document.getElementById("modal-assignee");
 const modalPriority = document.getElementById("modal-priority");
+const modalCreateDate = document.getElementById("modal-createDate");
 
 // console.log(total.textContent)
 // console.log(cardContainer.children.length);
@@ -97,6 +98,7 @@ async function openIssueModal(issueId) {
     modalDescription.textContent=issueDetails.description;
     modalAssignee.textContent =issueDetails.assignee;
     modalPriority.textContent =issueDetails.priority;
+    modalCreateDate.textContent = issueDetails.createdAt;
     modalLabels.innerHTML = renderLabels(issueDetails.labels);
 
     issueModal.showModal();
@@ -185,7 +187,7 @@ function displayOpenIssues(issues) {
 
         <div onclick="openIssueModal(${issue.id})" class="border-t border-gray-200 p-3 text-xs text-gray-500 space-y-2">
           <p>#${issue.id} by ${issue.author}</p>
-          <p>"1/15/2024"</p>
+          <p>${issue.createdAt}</p>
         </div>
         `;
 
@@ -231,7 +233,7 @@ function displayClosedIssues(issues) {
 
         <div onclick="openIssueModal(${issue.id})" class="border-t border-gray-200 p-3 text-xs text-gray-500 space-y-2">
           <p>#${issue.id} by ${issue.author}</p>
-          <p>"1/15/2024"</p>
+          <p>${issue.createdAt}</p>
         </div>
         `;
 
@@ -281,7 +283,7 @@ function displayIssues(issues) {
 
         <div onclick="openIssueModal(${issue.id})" class="border-t border-gray-200 p-3 text-xs text-gray-500 space-y-2">
           <p>#${issue.id} by ${issue.author}</p>
-          <p>"1/15/2024"</p>
+          <p>${issue.createdAt}</p>
         </div>
         `;
 
