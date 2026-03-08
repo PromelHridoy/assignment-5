@@ -244,9 +244,9 @@ function displayClosedIssues(issues) {
 function displayIssues(issues) {
     // console.log(issues);
     
-    const filter =issues.filter(i => i.status === 'open');
+    // const filter =issues.filter(i => i.status === 'open');
     // console.log(filter);
-    const filter2 =issues.filter(i => i.status === 'closed');
+    // const filter2 =issues.filter(i => i.status === 'closed');
     // console.log(filter2);
 
     issues.forEach(issue => {
@@ -294,36 +294,31 @@ function displayIssues(issues) {
 loadIssues();
 
 document.getElementById("btn-search").addEventListener("click", () => {
-    // removeActive();
-
     const input = document.getElementById("input-search");
     const searchValue = input.value.trim().toLowerCase();
-    // console.log(searchValue);
 
-    cardContainer.innerHTML = "";
-    openContainer.classList.add("hidden");
-    closedContainer.classList.add("hidden");
-    cardContainer.classList.remove("hidden");
-
-    showLoading()
+    showLoading();
 
     fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues`)
     .then((res) => res.json())
     .then((data) => {
         const allWords = data.data;
-        console.log(allWords);
-        // displayIssues(allWords)
         
-        const filterWords = allWords.filter(word => word.title.toLowerCase().includes(searchValue));
-        // console.log(filterWords);
-
+        const filterWords = allWords.filter(word => 
+            word.title.toLowerCase().includes(searchValue)
+        );
         displayIssues(filterWords);
 
-        total.textContent = filterWords.length;
+        const openFiltered = filterWords.filter(i => i.status === 'open');
+        displayOpenIssues(openFiltered);
 
-        hideLoading()
+        const closedFiltered = filterWords.filter(i => i.status === 'closed');
+        displayClosedIssues(closedFiltered);
+
+        toggleStyles('all-btn'); 
+
+        input.value = ""; 
+
+        hideLoading();
     })
-})
-
-
-
+});
