@@ -37,6 +37,8 @@
 
     - 5️⃣ What are template literals?
 
+    Template Literal = string written using backtick(``), where ${} can be used to place variables or expressions and can be written in multi-line.
+
 
 
 
